@@ -1,4 +1,3 @@
 # state-channel-sdk
 
-test
-
+- dotenv
