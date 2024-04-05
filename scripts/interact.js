@@ -1,16 +1,25 @@
 async function main() {
-  const {CONTRACT_ADDRESS} = process.env;
+  require("dotenv").config();
+  const { ethers } = require("ethers");
 
-  // The contract's address
-  const contractAddress = CONTRACT_ADDRESS;
+  const contract = require("../artifacts/contracts/Storage.sol/Storage.json");
 
-  // The interface of the contract
-  const Contract = await ethers.getContractFactory("Storage");
+  const { CONTRACT_ADDRESS, PRIVATE_KEY, API_URL } = process.env;
 
-  // Connect to the deployed contract
-  const contract = await Contract.attach(contractAddress);
+  // Provider
+  const alchemyProvider = new ethers.providers.JsonRpcProvider(API_URL);
 
-  // Example: calling a getter function of the contract
-  const value = await contract.checkBalance();
-  console.log("Value:", value.toString());
+  // Signer
+  const signer = new ethers.Wallet(PRIVATE_KEY, alchemyProvider);
+
+  // Contract
+  const StorageContract = new ethers.Contract(
+    CONTRACT_ADDRESS,
+    contract.abi,
+    signer
+  );
+
+  const balance = StorageContract.checkBalance();
+  console.log("Balance:" + balance);
 }
+main();
