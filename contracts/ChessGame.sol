@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {VerifySignature} from './Verify.sol';
+import {VerifySignature} from "./Verify.sol";
 
 contract ChessGame {
-    enum GameState {WaitingForOpponent, Active, Completed}
-    enum GameResult {Ongoing, Draw, Player1Wins, Player2Wins}
+    enum GameState {
+        WaitingForOpponent,
+        Active,
+        Completed
+    }
+    enum GameResult {
+        Ongoing,
+        Draw,
+        Player1Wins,
+        Player2Wins
+    }
 
     struct Game {
         address player1;
@@ -32,17 +41,28 @@ contract ChessGame {
     }
 
     modifier requiresMinimumBet(uint256 _betAmount) {
-        require(_betAmount >= minimumBetAmount, "Bet does not meet the minimum requirement.");
+        require(
+            _betAmount >= minimumBetAmount,
+            "Bet does not meet the minimum requirement."
+        );
         _;
     }
 
     modifier onlyArbitrator() {
-    require(msg.sender == arbitrator, "Only the arbitrator can call this function.");
-    _;
+        require(
+            msg.sender == arbitrator,
+            "Only the arbitrator can call this function."
+        );
+        _;
     }
 
     // functions
-    function createGame() public payable requiresMinimumBet(msg.value) returns (uint gameId) {
+    function createGame()
+        public
+        payable
+        requiresMinimumBet(msg.value)
+        returns (uint gameId)
+    {
         gameId = totalGames;
         games[totalGames] = Game({
             player1: msg.sender,
@@ -57,7 +77,9 @@ contract ChessGame {
         return gameId;
     }
 
-    function joinGame(uint _gameId) public payable inState(_gameId, GameState.WaitingForOpponent) {
+    function joinGame(
+        uint _gameId
+    ) public payable inState(_gameId, GameState.WaitingForOpponent) {
         Game storage game = games[_gameId];
         require(msg.value == game.betAmount, "Bet amount does not match.");
 
@@ -67,31 +89,38 @@ contract ChessGame {
         emit GameStarted(_gameId, msg.sender);
     }
 
-    // TODO: 
+    // TODO:
     // CAN ONLY BE CALLED BY ORACLE (use Chainlink functions)
-    function endGame(uint _gameId, GameResult _result) public onlyArbitrator inState(_gameId, GameState.Active) {
+    function endGame(
+        uint _gameId,
+        GameResult _result
+    ) public onlyArbitrator inState(_gameId, GameState.Active) {
         Game storage game = games[_gameId];
 
         if (_result == GameResult.Player1Wins) {
-            require(msg.sender == game.player1, "Only the winner can end the game.");
+            require(
+                msg.sender == game.player1,
+                "Only the winner can end the game."
+            );
         } else if (_result == GameResult.Player2Wins) {
-            require(msg.sender == game.player2, "Only the winner can end the game.");
+            require(
+                msg.sender == game.player2,
+                "Only the winner can end the game."
+            );
         }
-        
+
         game.result = _result;
         game.state = GameState.Completed;
 
-        if(_result == GameResult.Player1Wins) {
+        if (_result == GameResult.Player1Wins) {
             payable(game.player1).transfer(game.betAmount * 2);
-        } else if(_result == GameResult.Player2Wins) {
+        } else if (_result == GameResult.Player2Wins) {
             payable(game.player2).transfer(game.betAmount * 2);
-        } else if(_result == GameResult.Draw) {
+        } else if (_result == GameResult.Draw) {
             payable(game.player1).transfer(game.betAmount);
             payable(game.player2).transfer(game.betAmount);
         }
 
         emit GameEnded(_gameId, _result);
     }
-
 }
-

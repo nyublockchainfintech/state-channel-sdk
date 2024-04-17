@@ -12,3 +12,6 @@
 
 `npm install dotenv`
 
+### To deploy contract
+
+`npx hardhat run scripts/deploy.js --network sepolia`
