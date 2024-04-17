@@ -2,6 +2,8 @@ async function main() {
   require("dotenv").config();
   const { ethers } = require("ethers");
 
+
+  // const contract = require("../artifacts/contracts/ChessOriginal.sol/ChessOriginal.json");
   const contract = require("../artifacts/contracts/Storage.sol/Storage.json");
 
   const { CONTRACT_ADDRESS, PRIVATE_KEY, API_URL } = process.env;

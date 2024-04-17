@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {VerifySignature} from './Verify.sol';
+import {VerifySignature} from "./Verify.sol";
 
 contract ChessStateChannel {
     address public player1;
@@ -42,13 +42,9 @@ contract ChessStateChannel {
     // initializeGame is called when two players find each other and set a wager (frontend calls this as a third party)
     //
 
-    function initializeGame(address player1, address player2, ) public payable 
-    
-    {
-        
+    // function initializeGame(address player1, address player2, ) public payable
 
-    }
+    // {
 
-
+    // }
 }
-
