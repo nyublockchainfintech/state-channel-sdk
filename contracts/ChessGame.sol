@@ -89,7 +89,6 @@ contract ChessGame {
         emit GameStarted(_gameId, msg.sender);
     }
 
-    
     function endGame(
         uint _gameId,
         GameResult _result
@@ -124,7 +123,5 @@ contract ChessGame {
     }
 
     // TODO: Use Oracle + Study logic
-    function challenge(uint _gameId, address playerKey) public {
-
-    }
+    function challenge(uint _gameId, address playerKey) public {}
 }
