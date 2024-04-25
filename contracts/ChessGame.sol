@@ -89,12 +89,10 @@ contract ChessGame {
         emit GameStarted(_gameId, msg.sender);
     }
 
-    // TODO:
-    // CAN ONLY BE CALLED BY ORACLE (use Chainlink functions)
     function endGame(
         uint _gameId,
         GameResult _result
-    ) public onlyArbitrator inState(_gameId, GameState.Active) {
+    ) public inState(_gameId, GameState.Active) {
         Game storage game = games[_gameId];
 
         if (_result == GameResult.Player1Wins) {
@@ -123,4 +121,7 @@ contract ChessGame {
 
         emit GameEnded(_gameId, _result);
     }
+
+    // TODO: Use Oracle + Study logic
+    function challenge(uint _gameId, address playerKey) public {}
 }
